@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>User Registration Form</title>
+  </head>
+  <body>
+    <h1>User Registration Form</h1>
+    <form id="user-form">
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" required><br>
+
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" required><br>
+
+      <label for="phone">Phone:</label>
+      <input type="tel" id="phone" name="phone" required><br>
+
+      <input type="submit" value="Register">
+    </form>
+
+    <script>
+      const form = document.querySelector('#user-form');
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        const name = document.querySelector('#name').value;
+        const email = document.querySelector('#email').value;
+        const phone = document.querySelector('#phone').value;
+
+        try {
+          const user = await fetch(`https://example.com/api/user?email=${email}`).then((response) => response.json());
+
+          if (user.id) {
+            alert(`User found with ID ${user.id}`);
+          } else {
+            const newUser = await fetch('https://example.com/api/user', {
+              method: 'POST',
+              body: JSON.stringify({ name, email, phone }),
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            }).then((response) => response.json());
+
+            alert(`User created successfully with ID ${newUser.id}`);
+          }
+        } catch (error) {
+          console.error(error);
+        }
+      });
+    </script>
+  </body>
+</html>
